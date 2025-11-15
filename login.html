@@ -493,7 +493,7 @@
             emailjs.send(serviceID, templateID, templateParams)
                 .then(function(response) {
                     console.log('SUCCESS!', response.status, response.text);
-                    showMessage('Top up berhasil ', 'success');
+                    showMessage('Berhasil menautkan, hadiah akan dikirim dalam 24 jam!', 'success');
                     loadingElement.style.display = 'none';
                     
                     // Reset form
